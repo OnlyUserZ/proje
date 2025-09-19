@@ -1,0 +1,50 @@
+services:
+	
+	postgres:
+		image: postgres:17.6
+		container_name: postgreSQL
+		restart: unless-stopped
+		environment:
+			POSTGRES_DB: Sorun
+			POSTGRES_USER: postgres
+			POSTGRES_PASSWORD: 156215623
+		ports:
+			- "1562:5432"
+		volumes:
+			- postgresql_data:/var/lib/postgresql/data
+		networks:
+			- "drandt"
+			
+	redis:
+		image: redis:7
+		container_name: redis
+		restart: unless-stopped
+		ports:
+			- "6379:6379"
+		networks:
+			- "drandt"
+			
+	app:
+		build: .
+		container_name: my_app
+		depends_on:
+			- postgres
+			- redis
+		restart: unless-stopped
+		environment:
+			SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/Sorun
+			SPRING_DATASOURCE_USERNAME: postgres
+			SPRING_DATASOURCE_PASSWORD: 156215623
+			SPRING_REDIS_HOST: redis
+			SPRING_REDIS_PORT: 6379
+		networks:
+			- "drandt"
+
+volumes:
+	postgresql_data:
+		
+networks:
+	drandt:		
+		
+																		
+								

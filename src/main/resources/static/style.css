@@ -1,0 +1,58 @@
+body {
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h1, h2 {
+    color: #343a40;
+}
+
+form input, form textarea, form select {
+    border-radius: 0.375rem;
+}
+
+form button {
+    min-width: 100px;
+}
+
+.list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: #e9ecef;
+}
+
+.list-group-item b {
+    margin-right: 10px;
+}
+
+button.btn-sm {
+    min-width: 60px;
+}
+
+hr {
+    margin: 3rem 0;
+}
+
+/* USER PANEL */
+#userKategoriList div,
+#userSorunList div {
+    border: 1px solid #343a40;
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    min-width: 120px;
+    text-align: center;
+    background-color: #fff;
+    transition: background-color 0.2s;
+}
+
+#userKategoriList div:hover,
+#userSorunList div:hover {
+    background-color: #e9ecef;
+}

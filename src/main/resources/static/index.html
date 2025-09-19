@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Bir Günde Gelecek - Admin & User View</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="p-4">
+<div class="container">
+    <h1 class="mb-4">Bir Günde Gelecek</h1>
+
+    <!-- ADMIN PANEL -->
+    <div class="mb-5" id="adminPanel">
+        <h2>Admin Paneli</h2>
+
+        <!-- KATEGORİ -->
+        <form id="kategoriForm" class="d-flex mb-3">
+            <input type="hidden" id="kategoriId">
+            <input type="text" id="kategoriAd" class="form-control me-2" placeholder="Kategori Adı" required>
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+            <button type="button" id="kategoriCancel" class="btn btn-secondary ms-2">İptal</button>
+        </form>
+        <ul id="kategoriList" class="list-group mb-4"></ul>
+
+        <!-- SORUN -->
+        <div class="mb-3">
+            <select id="sorunKategori" class="form-select">
+                <option value="">Kategori Seç</option>
+            </select>
+        </div>
+        <form id="sorunForm" class="mb-3">
+            <input type="hidden" id="sorunId">
+            <input type="text" id="sorunBaslik" class="form-control mb-2" placeholder="Başlık" required>
+            <textarea id="sorunSorun" class="form-control mb-2" placeholder="Sorun" required></textarea>
+            <textarea id="sorunCozum" class="form-control mb-2" placeholder="Çözüm" required></textarea>
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+            <button type="button" id="sorunCancel" class="btn btn-secondary ms-2">İptal</button>
+        </form>
+
+        <ul id="sorunList" class="list-group"></ul>
+        <button id="userViewBtn" class="btn btn-success mt-3">User Görünümü</button>
+    </div>
+
+    <!-- USER PANEL -->
+    <div id="userPanel" class="d-none">
+        <h2>User Görünümü</h2>
+        <div id="userKategoriList" class="d-flex flex-wrap mb-3"></div>
+        <div id="userSorunList" class="d-flex flex-wrap"></div>
+        <button id="backToCategories" class="btn btn-secondary mt-3 d-none">Geri</button>
+        <button id="backToAdmin" class="btn btn-danger mt-3 ms-2">Admin Paneline Dön</button>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
