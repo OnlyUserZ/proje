@@ -43,7 +43,7 @@ services:
       - drandt
 
 volumes:
-  postgresql_data:
+  ${POSTGRES_VOLUME}:
 
 networks:
   drandt:
