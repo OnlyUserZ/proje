@@ -38,12 +38,12 @@ async function fetchKategoriler() {
         const data = await res.json();
         kategoriler = data.content; // <-- Page objesinden array alındı
 
-        // Admin panel listeleri
+        
         kategoriList.innerHTML = "";
         sorunKategori.innerHTML = '<option value="">Kategori Seç</option>';
 
         kategoriler.forEach(k => {
-            // Kategori Listesi
+            
             const li = document.createElement("li");
             li.className = "list-group-item d-flex justify-content-between align-items-center";
             li.textContent = k.ad;
@@ -86,7 +86,7 @@ async function fetchKategoriler() {
     }
 }
 
-// Kategori Kaydet / Düzenle
+
 kategoriForm.onsubmit = async (e) => {
     e.preventDefault();
     const dto = { ad: kategoriAd.value };
@@ -117,7 +117,7 @@ kategoriCancel.onclick = () => {
     kategoriAd.value = "";
 };
 
-// ---------- SORUN CRUD ----------
+
 sorunKategori.onchange = () => {
     selectedKategoriId = sorunKategori.value;
     fetchSorunlar();
@@ -215,7 +215,7 @@ sorunCancel.onclick = () => {
     sorunKategori.value = "";
 };
 
-// ---------- USER PANEL FONKSİYONLARI ----------
+
 userViewBtn.onclick = () => {
     adminPanel.classList.add("d-none");
     userPanel.classList.remove("d-none");
@@ -244,7 +244,7 @@ function renderUserKategoriler() {
     });
 }
 
-// User görünümü: seçilen kategoriye ait sorunları göster
+
 async function renderUserSorunlar(kategoriId) {
     userKategoriList.classList.add("d-none");
     backToCategories.classList.remove("d-none");

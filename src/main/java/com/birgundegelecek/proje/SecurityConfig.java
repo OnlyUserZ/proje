@@ -15,13 +15,6 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/**").permitAll()
-
-                
-                .requestMatchers(org.springframework.http.HttpMethod.POST, "/**").hasRole("ADMIN")
-                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/**").hasRole("ADMIN")
-                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/**").hasRole("ADMIN")
-
-                
                 .anyRequest().authenticated()
             )
             .httpBasic();

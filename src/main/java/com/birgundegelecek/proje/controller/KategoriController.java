@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.birgundegelecek.proje.dto.KategoriDTO;
@@ -19,6 +20,7 @@ public class KategoriController {
     private final KategoriService kategoriService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<KategoriDTO> kategoriEkle(@RequestBody KategoriDTO dto) {
         KategoriDTO eklenen = kategoriService.kategoriEkle(dto);
         return ResponseEntity.ok(eklenen);
@@ -34,12 +36,14 @@ public class KategoriController {
     }
 
     @DeleteMapping("/toplu")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> kategorilerSil(@RequestBody List<Long> ids) {
         kategoriService.kategorilerSil(ids);
         return ResponseEntity.ok().build();
     }
-
+    
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> kategoriGuncelle(@PathVariable Long id, @RequestBody KategoriDTO dto) {
         kategoriService.kategoriGuncelle(id, dto);
         return ResponseEntity.ok().build();
