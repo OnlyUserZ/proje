@@ -34,10 +34,6 @@ button.btn-sm {
     min-width: 60px;
 }
 
-hr {
-    margin: 3rem 0;
-}
-
 /* USER PANEL */
 #userKategoriList div,
 #userSorunList div {

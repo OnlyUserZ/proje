@@ -3,6 +3,8 @@ package com.birgundegelecek.proje.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.type.TrueFalseConverter;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +25,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(
+	    name = "kategori",
+	    uniqueConstraints = {
+	        @UniqueConstraint(columnNames = "ad")
+	    }
+	)
 
 public class Kategori {
 	
@@ -28,7 +38,7 @@ public class Kategori {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = false)
+	@Column(unique = true , nullable = false)
 	private String ad;
 	
 	@OneToMany(mappedBy = "kategori" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)

@@ -36,7 +36,7 @@ async function fetchKategoriler() {
     try {
         const res = await fetch(`${apiBase}/kategori?page=0&size=100`);
         const data = await res.json();
-        kategoriler = data;
+        kategoriler = data.content; // <-- Page objesinden array alındı
 
         // Admin panel listeleri
         kategoriList.innerHTML = "";
@@ -117,7 +117,7 @@ kategoriCancel.onclick = () => {
     kategoriAd.value = "";
 };
 
-// Sorun CRUD
+// ---------- SORUN CRUD ----------
 sorunKategori.onchange = () => {
     selectedKategoriId = sorunKategori.value;
     fetchSorunlar();
@@ -131,8 +131,10 @@ async function fetchSorunlar() {
     try {
         const res = await fetch(`${apiBase}/sorun/kategori/${selectedKategoriId}?page=0&size=100`);
         const data = await res.json();
+        const sorunlar = data.content; // <-- Page objesinden array alındı
+
         sorunList.innerHTML = "";
-        data.forEach(s => {
+        sorunlar.forEach(s => {
             const li = document.createElement("li");
             li.className = "list-group-item d-flex justify-content-between align-items-center";
             li.innerHTML = `<b>${s.baslik}</b> - ${s.sorun} - ${s.cozum}`;
@@ -237,9 +239,7 @@ function renderUserKategoriler() {
     kategoriler.forEach(k => {
         const div = document.createElement("div");
         div.textContent = k.ad;
-        div.onclick = () => {
-            renderUserSorunlar(k.id);
-        };
+        div.onclick = () => renderUserSorunlar(k.id);
         userKategoriList.appendChild(div);
     });
 }
@@ -251,8 +251,10 @@ async function renderUserSorunlar(kategoriId) {
     try {
         const res = await fetch(`${apiBase}/sorun/kategori/${kategoriId}?page=0&size=100`);
         const data = await res.json();
+        const sorunlar = data.content; // <-- Page objesinden array alındı
+
         userSorunList.innerHTML = "";
-        data.forEach(s => {
+        sorunlar.forEach(s => {
             const div = document.createElement("div");
             div.textContent = s.baslik;
             div.onclick = () => {
