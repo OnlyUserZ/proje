@@ -130,6 +130,8 @@ class KategoriServiceTest {
 		when(kategoriRepository.findById(1L)).thenReturn(Optional.of(kategori));
 		when(kategoriRepository.save(any(Kategori.class))).thenReturn(kategori);
 		
+		kategoriService.kategoriGuncelle(1L, dto);
+		
 		assertEquals("yeni", kategori.getAd());
 	    assertEquals(1L, kategori.getId());
 		

@@ -65,6 +65,7 @@ class SorunServiceTest {
 		sorun.setCozum(dto.getCozum());
 		sorun.setId(1L);
 		sorun.setKategori(kategori);
+		sorun.setSorun(dto.getSorun());
 		
 		when(kategoriRepository.findById(2L)).thenReturn(Optional.of(kategori));
 		when(sorunRepository.save(any(Sorun.class))).thenReturn(sorun);
@@ -90,7 +91,7 @@ class SorunServiceTest {
 		
 		KategoriBulunamadıException ex = assertThrows(KategoriBulunamadıException.class , () -> sorunService.sorunlarGoster(kategoriId, 1, 2));
 		
-		assertEquals("Kategori Bulunamadı", ex.getMessage());
+		assertEquals("Kategori bulunamadı", ex.getMessage());
 	}
 
 	
