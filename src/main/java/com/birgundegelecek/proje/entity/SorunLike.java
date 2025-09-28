@@ -1,8 +1,5 @@
 package com.birgundegelecek.proje.entity;
 
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,11 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+@Table(name = "likes",
+uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "sorun_id"})})
 
 @Entity
 @Getter
@@ -22,24 +23,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Sorun {
+public class SorunLike {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String baslik;
-	
-	private String sorun;
-	
-	private String cozum;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "kategori_id")
-	private Kategori kategori;
+	@JoinColumn(name = "sorun_id")
+	private Sorun sorun;
 	
-	@OneToMany(mappedBy = "sorun" , cascade = CascadeType.ALL)
-	private Set<SorunLike> sorunLike;
-
+	
+	
+	
 
 }

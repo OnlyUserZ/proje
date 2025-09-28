@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.birgundegelecek.proje.dto.KategoriDTO;
 import com.birgundegelecek.proje.service.KategoriService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -21,7 +22,7 @@ public class KategoriController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<KategoriDTO> kategoriEkle(@RequestBody KategoriDTO dto) {
+    public ResponseEntity<KategoriDTO> kategoriEkle(@Valid @RequestBody KategoriDTO dto) {
         KategoriDTO eklenen = kategoriService.kategoriEkle(dto);
         return ResponseEntity.ok(eklenen);
     }
@@ -44,7 +45,7 @@ public class KategoriController {
     
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> kategoriGuncelle(@PathVariable Long id, @RequestBody KategoriDTO dto) {
+    public ResponseEntity<Void> kategoriGuncelle(@PathVariable Long id, @Valid @RequestBody KategoriDTO dto) {
         kategoriService.kategoriGuncelle(id, dto);
         return ResponseEntity.ok().build();
     }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.birgundegelecek.proje.dto.SorunDTO;
 import com.birgundegelecek.proje.service.SorunService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -31,14 +32,14 @@ public class SorunController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<SorunDTO> createSorun(@RequestBody SorunDTO dto) {
+    public ResponseEntity<SorunDTO> createSorun(@Valid @RequestBody SorunDTO dto) {
         SorunDTO created = sorunService.sorunEkle(dto);
         return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> updateSorun(@PathVariable Long id, @RequestBody SorunDTO dto) {
+    public ResponseEntity<Void> updateSorun(@PathVariable Long id, @Valid @RequestBody SorunDTO dto) {
         sorunService.sorunGuncelle(id, dto);
         return ResponseEntity.ok().build();
     }

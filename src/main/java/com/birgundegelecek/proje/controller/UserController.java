@@ -28,7 +28,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserDTO dto) {
         boolean success = userService.login(dto);
-        if (success) {
+        if (success == true) {
             return ResponseEntity.ok("Giriş başarılı");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Kullanıcı adı veya şifre yanlış");

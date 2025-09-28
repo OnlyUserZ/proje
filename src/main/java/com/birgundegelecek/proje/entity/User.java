@@ -1,10 +1,14 @@
 package com.birgundegelecek.proje.entity;
 
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +30,9 @@ public class User {
 	
 	@Column(nullable = false)
 	private String password;
+
+	@OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+	private Set<SorunLike> sorunLikes;
+	
 
 }
