@@ -31,7 +31,7 @@ public class User {
 	@Column(nullable = false)
 	private String password;
 
-	@OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "User" , cascade = CascadeType.ALL)
 	private Set<SorunLike> sorunLikes;
 	
 

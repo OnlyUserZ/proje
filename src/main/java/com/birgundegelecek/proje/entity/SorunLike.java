@@ -31,11 +31,11 @@ public class SorunLike {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private User user;
+	private User User;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "sorun_id")
-	private Sorun sorun;
+	private Sorun Sorun;
 	
 	
 	

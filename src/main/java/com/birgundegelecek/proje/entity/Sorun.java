@@ -38,7 +38,7 @@ public class Sorun {
 	@JoinColumn(name = "kategori_id")
 	private Kategori kategori;
 	
-	@OneToMany(mappedBy = "sorun" , cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "Sorun" , cascade = CascadeType.ALL)
 	private Set<SorunLike> sorunLike;
 
 
