@@ -26,8 +26,9 @@ public class KategoriController {
         KategoriDTO eklenen = kategoriService.kategoriEkle(dto);
         return ResponseEntity.ok(eklenen);
     }
-
+    
     @GetMapping
+    
     public ResponseEntity<Page<KategoriDTO>> kategorilerGoster(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
