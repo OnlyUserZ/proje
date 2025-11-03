@@ -36,6 +36,7 @@ public class Sorun {
 	
 	private Long likeToplam;
 	
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "kategori_id")
 	private Kategori kategori;

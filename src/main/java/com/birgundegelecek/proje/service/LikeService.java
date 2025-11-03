@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Flow.Publisher;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.birgundegelecek.proje.dto.SorunLikeDTO;
 import com.birgundegelecek.proje.entity.Sorun;
 import com.birgundegelecek.proje.entity.SorunLike;
 import com.birgundegelecek.proje.entity.User;
+import com.birgundegelecek.proje.event.LikeEvent;
 import com.birgundegelecek.proje.exception.SorunBulunamadıException;
 import com.birgundegelecek.proje.exception.SorunLikeBulunamadıException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
@@ -32,6 +35,7 @@ public class LikeService {
 	private final SorunLikeRepository sorunLikeRepository;
 	private final UserRepository userRepository;
 	private final SorunRepository sorunRepository;
+	private final ApplicationEventPublisher publisher;
 	
 	public SorunLike likeEkle(SorunLikeDTO dto) {
 	    User user = userRepository.findById(dto.getUser_id())
@@ -44,7 +48,8 @@ public class LikeService {
 	    
 	    if(var == true) {
 	    	sorunLikeRepository.deleteBySorunAndUser(sorun, user);
-	    	sorun.setLikeToplam(sorun.getLikeToplam() - 1);
+	    	sorun.setLikeToplam(sorun.getLikeToplam() - 1);	    	
+	    	publisher.publishEvent(new LikeEvent(this , sorun.getId(), false)); 
 	    	return null;
 	    }
 	    
@@ -52,7 +57,9 @@ public class LikeService {
 	    sorunLike.setSorun(sorun);
 	    sorunLike.setUser(user);
 	    
+	    
 	    sorun.setLikeToplam(sorun.getLikeToplam() + 1);
+	    publisher.publishEvent(new LikeEvent(this , sorun.getId(), true));
 	    return sorunLikeRepository.save(sorunLike);
 	
 	}

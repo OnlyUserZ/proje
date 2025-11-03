@@ -1,11 +1,14 @@
 package com.birgundegelecek.proje.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.birgundegelecek.proje.entity.SorunLike;
 import com.birgundegelecek.proje.entity.Sorun;
 import com.birgundegelecek.proje.entity.User;
+
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +16,10 @@ import java.util.Optional;
 
 @Repository
 public interface SorunLikeRepository extends JpaRepository<SorunLike, Long> {
+	
+	@Query("SELECT s FROM Sorun s WHERE s.likeHaftalikToplam > 20")
+	List<Sorun> HaftalikEnCokLikeAlan10Sorun(Pageable pageable);
+	
 	
    boolean existsBySorunAndUser(Sorun sorun, User user);
    void deleteBySorunAndUser(Sorun sorun, User user);

@@ -71,6 +71,8 @@ public class SorunService {
 	        return dto; 
 	    });
 	}
+	
+	
 
 	
 	@Transactional

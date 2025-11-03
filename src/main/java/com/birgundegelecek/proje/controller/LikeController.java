@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.birgundegelecek.proje.dto.SorunLikeDTO;
+import com.birgundegelecek.proje.entity.SorunLike;
 import com.birgundegelecek.proje.service.LikeService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,9 @@ public class LikeController {
 	private final LikeService likeService;
 	
 	@PostMapping("/toggle-like")
-	public ResponseEntity<Map<String, Object>> likeEkle(@RequestBody SorunLikeDTO dto) {
+	public ResponseEntity<SorunLike> likeEkle(@RequestBody SorunLikeDTO dto) {
 		
-		Map<String, Object> cevap = likeService.likeEkle(dto);
+		SorunLike cevap = likeService.likeEkle(dto);
 		
 		return ResponseEntity.ok(cevap);
 	}
