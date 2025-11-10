@@ -17,10 +17,6 @@ import java.util.Optional;
 @Repository
 public interface SorunLikeRepository extends JpaRepository<SorunLike, Long> {
 	
-	@Query("SELECT s FROM Sorun s WHERE s.likeHaftalikToplam > 20")
-	List<Sorun> HaftalikEnCokLikeAlan10Sorun(Pageable pageable);
-	
-	
    boolean existsBySorunAndUser(Sorun sorun, User user);
    void deleteBySorunAndUser(Sorun sorun, User user);
    Optional<SorunLike> findBySorunAndUser(Sorun sorun, User user);

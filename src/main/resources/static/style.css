@@ -1,54 +1,143 @@
+/* Genel */
 body {
-    background-color: #f8f9fa;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
 }
 
 h1, h2 {
-    color: #343a40;
+  color: #333;
 }
 
-form input, form textarea, form select {
-    border-radius: 0.375rem;
+.panel {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
 }
 
-form button {
-    min-width: 100px;
+.d-none { display: none; }
+
+/* Formlar */
+.auth-form, form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
-.list-group-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s ease;
+input, textarea, select, button {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 }
 
-.list-group-item:hover {
-    background-color: #e9ecef;
+button {
+  cursor: pointer;
+  background: #007bff;
+  color: #fff;
+  border: none;
 }
 
-.list-group-item b {
-    margin-right: 10px;
+button:hover {
+  background: #0056b3;
 }
 
-button.btn-sm {
-    min-width: 60px;
+/* Listeler */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
 }
 
-/* USER PANEL */
-#userKategoriList div,
-#userSorunList div {
-    border: 1px solid #343a40;
-    border-radius: 8px;
-    padding: 1rem;
-    margin: 0.5rem;
-    cursor: pointer;
-    min-width: 120px;
-    text-align: center;
-    background-color: #fff;
-    transition: background-color 0.2s;
+.list li {
+  background: #f0f0f0;
+  margin-bottom: 5px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 4px;
 }
 
-#userKategoriList div:hover,
-#userSorunList div:hover {
-    background-color: #e9ecef;
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
 }
+
+.pagination button {
+  padding: 4px 8px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.kategori-card {
+  background: #007bff;
+  color: #fff;
+  padding: 20px;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.kategori-card:hover {
+  background: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Kullanıcı Sorun Kartları */
+.user-sorun-card {
+  background: #fff;
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+}
+
+.user-sorun-card p {
+  margin: 4px 0;
+}
+
+.muted {
+  color: #555;
+}
+
+.muted-italic {
+  color: #777;
+  font-style: italic;
+}
+
+.btn-like-small {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: none;
+  background: #ff6b6b;
+  color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Toast Container */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 250px;
+  z-index: 1000;
+}
+

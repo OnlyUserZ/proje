@@ -16,6 +16,7 @@ import java.util.Set;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ public class LikeController {
 	private final LikeService likeService;
 	
 	@PostMapping("/toggle-like")
+	@PreAuthorize("hasRole('ADMIN','USER')")
 	public ResponseEntity<SorunLike> likeEkle(@RequestBody SorunLikeDTO dto) {
 		
 		SorunLike cevap = likeService.likeEkle(dto);

@@ -1,57 +1,95 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Bir Günde Gelecek - Admin & User View</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bir Günde Gelecek</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4">
-<div class="container">
-    <h1 class="mb-4">Bir Günde Gelecek</h1>
+<body>
+ 
+  <div id="toast-container"></div>
 
-    <!-- ADMIN PANEL -->
-    <div class="mb-5" id="adminPanel">
-        <h2>Admin Paneli</h2>
+  <!-- AUTH -->
+  <section id="authSection">
+    <form id="loginForm" class="auth-form">
+      <h2>Giriş</h2>
+      <input type="text" id="loginUser" placeholder="Kullanıcı adı">
+      <input type="password" id="loginPass" placeholder="Parola">
+      <button type="submit">Giriş Yap</button>
+    </form>
 
-        <!-- KATEGORİ -->
-        <form id="kategoriForm" class="d-flex mb-3">
-            <input type="hidden" id="kategoriId">
-            <input type="text" id="kategoriAd" class="form-control me-2" placeholder="Kategori Adı" required>
-            <button type="submit" class="btn btn-primary">Kaydet</button>
-            <button type="button" id="kategoriCancel" class="btn btn-secondary ms-2">İptal</button>
-        </form>
-        <ul id="kategoriList" class="list-group mb-4"></ul>
+    <form id="registerForm" class="auth-form">
+      <h2>Kayıt</h2>
+      <input type="text" id="registerUser" placeholder="Kullanıcı adı">
+      <input type="password" id="registerPass" placeholder="Parola">
+      <button type="submit">Kayıt Ol</button>
+    </form>
 
-        <!-- SORUN -->
-        <div class="mb-3">
-            <select id="sorunKategori" class="form-select">
-                <option value="">Kategori Seç</option>
-            </select>
-        </div>
-        <form id="sorunForm" class="mb-3">
-            <input type="hidden" id="sorunId">
-            <input type="text" id="sorunBaslik" class="form-control mb-2" placeholder="Başlık" required>
-            <textarea id="sorunSorun" class="form-control mb-2" placeholder="Sorun" required></textarea>
-            <textarea id="sorunCozum" class="form-control mb-2" placeholder="Çözüm" required></textarea>
-            <button type="submit" class="btn btn-primary">Kaydet</button>
-            <button type="button" id="sorunCancel" class="btn btn-secondary ms-2">İptal</button>
-        </form>
+    <button id="logoutBtn" class="d-none">Çıkış Yap</button>
+  </section>
 
-        <ul id="sorunList" class="list-group"></ul>
-        <button id="userViewBtn" class="btn btn-success mt-3">User Görünümü</button>
+ 
+  <section id="adminPanel" class="panel">
+    <h1>Admin Panel</h1>
+
+    <div class="admin-section">
+      <h2>Kategoriler</h2>
+      <form id="kategoriForm">
+        <input type="hidden" id="kategoriId">
+        <input type="text" id="kategoriAd" placeholder="Kategori adı">
+        <button type="submit">Kaydet</button>
+        <button type="button" id="kategoriCancel">İptal</button>
+      </form>
+
+      <ul id="kategoriList" class="list"></ul>
+      <div class="pagination">
+        <button id="kategoriPagePrev">◀</button>
+        <span id="kategoriPageNum"></span>
+        <button id="kategoriPageNext">▶</button>
+      </div>
+      <button id="kategoriBulkDelete">Seçili Kategorileri Sil</button>
     </div>
 
-    <!-- USER PANEL -->
-    <div id="userPanel" class="d-none">
-        <h2>User Görünümü</h2>
-        <div id="userKategoriList" class="d-flex flex-wrap mb-3"></div>
-        <div id="userSorunList" class="d-flex flex-wrap"></div>
-        <button id="backToCategories" class="btn btn-secondary mt-3 d-none">Geri</button>
-        <button id="backToAdmin" class="btn btn-danger mt-3 ms-2">Admin Paneline Dön</button>
-    </div>
-</div>
+    <div class="admin-section">
+      <h2>Sorunlar</h2>
+      <form id="sorunForm">
+        <input type="hidden" id="sorunId">
+        <select id="sorunKategori"></select>
+        <input type="text" id="sorunBaslik" placeholder="Başlık">
+        <textarea id="sorunSorun" placeholder="Sorun"></textarea>
+        <textarea id="sorunCozum" placeholder="Çözüm"></textarea>
+        <button type="submit">Kaydet</button>
+        <button type="button" id="sorunCancel">İptal</button>
+      </form>
 
-<script src="app.js"></script>
+      <ul id="sorunList" class="list"></ul>
+      <div class="pagination">
+        <button id="sorunPagePrev">◀</button>
+        <span id="sorunPageNum"></span>
+        <button id="sorunPageNext">▶</button>
+      </div>
+      <button id="sorunBulkDelete">Seçili Sorunları Sil</button>
+    </div>
+
+    <button id="userViewBtn">Kullanıcı Görünümü</button>
+  </section>
+
+  
+  <section id="userPanel" class="panel d-none">
+    <h1>Kullanıcı Paneli</h1>
+    <div id="userKategoriList" class="grid"></div>
+    <button id="backToCategories" class="d-none">Geri</button>
+    <div id="userSorunList" class="list"></div>
+    <button id="backToAdmin">Admin Paneline Dön</button>
+
+    <div class="haftalik-top">
+      <h2>Haftanın En Çok Beğenilen Sorunları</h2>
+      <button id="haftalikTopBtn">Yenile</button>
+      <div id="haftalikTopContainer"></div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
 </body>
 </html>

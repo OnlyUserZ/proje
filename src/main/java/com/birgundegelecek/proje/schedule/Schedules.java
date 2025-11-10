@@ -1,5 +1,7 @@
 package com.birgundegelecek.proje.schedule;
 
+import java.util.Set;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,7 +16,7 @@ public class Schedules {
     @Scheduled(cron = "0 59 23 ? * SUN")
     public void HaftalikLikeleriSil() {
         
-        var keys = redisTemplate.keys("haftalik_like:*");
+    	Set<String> keys = redisTemplate.keys("haftalik_like:*");
         if (keys != null && !keys.isEmpty()) {
             redisTemplate.delete(keys);
             System.out.println("Haftalık like verileri silindi: " + keys.size());
