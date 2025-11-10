@@ -9,9 +9,14 @@ import com.birgundegelecek.proje.service.LikeService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class LikeController {
 	
+	private final RedisTemplate<String, String> redisTemplate;
 	private final LikeService likeService;
 	
 	@PostMapping("/toggle-like")
@@ -30,6 +36,18 @@ public class LikeController {
 		
 		return ResponseEntity.ok(cevap);
 	}
+	
+	@GetMapping("/haftalik-en-cok-begenilenler")
+	public List<Long> getHaftalikEnCokBegenilenSorunlar() {
+	    Set<ZSetOperations.TypedTuple<String>> top =
+	        redisTemplate.opsForZSet().reverseRangeWithScores("haftalik_like:", 0, 9); 
+	    if (top == null) return List.of();
+
+	    return top.stream()
+	              .map(t -> Long.valueOf(t.getValue()))
+	              .toList();
+	}
+
 	
 
 }
