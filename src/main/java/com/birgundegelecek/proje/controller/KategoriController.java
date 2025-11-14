@@ -29,6 +29,7 @@ public class KategoriController {
     
     @GetMapping
     
+    
     public ResponseEntity<Page<KategoriDTO>> kategorilerGoster(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
