@@ -33,7 +33,6 @@ public class LikeController {
 	
 	@PostMapping("/toggle-like")
 	@PreAuthorize("hasRole('ADMIN','USER')")
-	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<SorunLike> likeEkle(@RequestBody SorunLikeDTO dto) {
 		
 		SorunLike cevap = likeService.likeEkle(dto);
@@ -41,8 +40,7 @@ public class LikeController {
 		return ResponseEntity.ok(cevap);
 	}
 	
-	@GetMapping("/haftalik-en-cok-begenilenler")
-	@CrossOrigin(origins = "http://localhost:3000")
+	@GetMapping("/haftalik-en-cok-begenilenler")	
 	public List<Long> getHaftalikEnCokBegenilenSorunlar() {
 	    Set<ZSetOperations.TypedTuple<String>> top =
 	        redisTemplate.opsForZSet().reverseRangeWithScores("haftalik_like:", 0, 9); 

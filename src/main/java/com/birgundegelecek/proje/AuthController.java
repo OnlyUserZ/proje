@@ -25,7 +25,6 @@ public class AuthController {
 
     
     @PostMapping("/login")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -44,7 +43,6 @@ public class AuthController {
 
     
     @PostMapping("/refresh")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<AuthResponse> refresh(@RequestBody RefreshRequest request) {
         String refreshToken = request.getRefreshToken();
 
@@ -74,7 +72,6 @@ public class AuthController {
 
    
     @PostMapping("/logout")
-    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> logout(@RequestBody RefreshRequest request) {
         String refreshToken = request.getRefreshToken();
 
