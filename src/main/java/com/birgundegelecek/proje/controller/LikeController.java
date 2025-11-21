@@ -17,6 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,7 @@ public class LikeController {
 	
 	@PostMapping("/toggle-like")
 	@PreAuthorize("hasRole('ADMIN','USER')")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public ResponseEntity<SorunLike> likeEkle(@RequestBody SorunLikeDTO dto) {
 		
 		SorunLike cevap = likeService.likeEkle(dto);
@@ -40,6 +42,7 @@ public class LikeController {
 	}
 	
 	@GetMapping("/haftalik-en-cok-begenilenler")
+	@CrossOrigin(origins = "http://localhost:3000")
 	public List<Long> getHaftalikEnCokBegenilenSorunlar() {
 	    Set<ZSetOperations.TypedTuple<String>> top =
 	        redisTemplate.opsForZSet().reverseRangeWithScores("haftalik_like:", 0, 9); 

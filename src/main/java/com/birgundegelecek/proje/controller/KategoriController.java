@@ -22,14 +22,14 @@ public class KategoriController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<KategoriDTO> kategoriEkle(@Valid @RequestBody KategoriDTO dto) {
         KategoriDTO eklenen = kategoriService.kategoriEkle(dto);
         return ResponseEntity.ok(eklenen);
     }
     
     @GetMapping
-    
-    
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Page<KategoriDTO>> kategorilerGoster(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -40,6 +40,7 @@ public class KategoriController {
 
     @DeleteMapping("/toplu")
     @PreAuthorize("hasRole('ADMIN')")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> kategorilerSil(@RequestBody List<Long> ids) {
         kategoriService.kategorilerSil(ids);
         return ResponseEntity.ok().build();
@@ -47,6 +48,7 @@ public class KategoriController {
     
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<Void> kategoriGuncelle(@PathVariable Long id, @Valid @RequestBody KategoriDTO dto) {
         kategoriService.kategoriGuncelle(id, dto);
         return ResponseEntity.ok().build();

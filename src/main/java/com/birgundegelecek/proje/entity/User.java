@@ -1,19 +1,15 @@
 package com.birgundegelecek.proje.entity;
 
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,19 +18,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
-	
-	@Column(nullable = false , unique = true)
-	private String username;
-	
-	@Column(nullable = false)
-	private String password;
 
-	@OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    private Long id;
+
+    @Column(unique = true, nullable = false) 
+    private String username;
+
+    @Column(nullable = false) 
+    private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER) 
+    private List<String> roles; 
+
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
 	private Set<SorunLike> sorunLikes;
-	
 
+	
 }
