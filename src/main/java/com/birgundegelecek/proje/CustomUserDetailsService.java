@@ -1,5 +1,6 @@
 package com.birgundegelecek.proje;
 
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,16 +22,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı")); 
+                .orElseThrow(() -> new UsernameNotFoundException("Kullanıcı bulunamadı"));
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), 
-                user.getPassword(), 
-                user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role)) 
-                        .collect(Collectors.toList()) 
+                user.getUsername(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
         );
     }
 }

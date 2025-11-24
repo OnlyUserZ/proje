@@ -30,28 +30,37 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
+        String path = request.getServletPath();
+
+       
+        if (path.startsWith("/login") ||
+            path.startsWith("/refresh") ||
+            path.startsWith("/register") ||
+            path.startsWith("/api/kategori/goster") ||
+            path.startsWith("/api/sorun/kategori")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         String token = null;
         String username = null;
 
         try {
-           
+
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 token = authHeader.substring(7);
                 username = jwtUtil.extractUsername(token);
 
-                
                 if (tokenBlacklistService.isBlacklisted(token)) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token kara listede.");
                     return;
                 }
             }
 
-            
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-               
                 if (jwtUtil.isAccessTokenValid(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -61,19 +70,16 @@ public class JwtFilter extends OncePerRequestFilter {
                 }
             }
         } catch (ExpiredJwtException e) {
-            
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token süresi dolmuş.");
             return;
         } catch (MalformedJwtException e) {
-           
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token geçersiz.");
             return;
         } catch (Exception e) {
-           
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token doğrulanamadı.");
             return;
         }
 
-        filterChain.doFilter(request, response); 
+        filterChain.doFilter(request, response);
     }
 }

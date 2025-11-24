@@ -20,14 +20,14 @@ public class KategoriController {
 
     private final KategoriService kategoriService;
 
-    @PostMapping
+    @PostMapping("/ekle")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<KategoriDTO> kategoriEkle(@Valid @RequestBody KategoriDTO dto) {
         KategoriDTO eklenen = kategoriService.kategoriEkle(dto);
         return ResponseEntity.ok(eklenen);
     }
     
-    @GetMapping
+    @GetMapping("/goster")
     public ResponseEntity<Page<KategoriDTO>> kategorilerGoster(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -43,7 +43,7 @@ public class KategoriController {
         return ResponseEntity.ok().build();
     }
     
-    @PutMapping("/{id}")
+    @PutMapping("/guncelle/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> kategoriGuncelle(@PathVariable Long id, @Valid @RequestBody KategoriDTO dto) {
         kategoriService.kategoriGuncelle(id, dto);

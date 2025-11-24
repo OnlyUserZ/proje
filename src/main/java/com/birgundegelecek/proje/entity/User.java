@@ -29,8 +29,7 @@ public class User {
     @Column(nullable = false) 
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER) 
-    private List<String> roles; 
+    private String role; 
 
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
 	private Set<SorunLike> sorunLikes;

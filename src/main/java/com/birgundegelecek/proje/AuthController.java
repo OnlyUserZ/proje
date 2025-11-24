@@ -7,10 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.birgundegelecek.proje.entity.User;
+import com.birgundegelecek.proje.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +26,8 @@ public class AuthController {
     private final CustomUserDetailsService userDetailsService; 
     private final JwtUtil jwtUtil; 
     private final TokenBlacklistService tokenBlacklistService; 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     
     @PostMapping("/login")
@@ -69,6 +75,24 @@ public class AuthController {
 
         return ResponseEntity.ok(new AuthResponse(newAccessToken, newRefreshToken));
     }
+    
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Bu kullanıcı adı zaten alınmış.");
+        }
+
+        User newUser = new User();
+        newUser.setUsername(request.getUsername());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        newUser.setRole("USER");
+
+        userRepository.save(newUser);
+
+        return ResponseEntity.ok("Kayıt başarıyla tamamlandı.");
+    }
+
 
    
     @PostMapping("/logout")
@@ -80,7 +104,7 @@ public class AuthController {
         }
 
         String jti = jwtUtil.extractTokenId(refreshToken);
-        tokenBlacklistService.blacklistToken(jti, 1000L * 60 * 60 * 24 * 7); // 7 gün blacklist süresi (PROJENE ÖZEL)
+        tokenBlacklistService.blacklistToken(jti, 1000L * 60 * 60 * 24 * 7);
 
         return ResponseEntity.ok("Başarıyla çıkış yapıldı.");
     }

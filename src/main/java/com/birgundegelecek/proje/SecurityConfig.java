@@ -29,8 +29,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", "/index.html", "/app.js", "/style.css", "/favicon.ico"
                 ).permitAll()
-                .requestMatchers("/auth/login", "/auth/refresh", "/auth/register").permitAll()              
-                .requestMatchers("/admin").hasRole("ADMIN")               
+                .requestMatchers("/login", "/refresh", "/register", "/api/kategori/goster/**", "/api/sorun/kategori/*" ).permitAll()              
+                .requestMatchers("/admin/**").hasRole("ADMIN")               
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
