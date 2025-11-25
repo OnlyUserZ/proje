@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
 @Getter
 @Setter
 @NoArgsConstructor

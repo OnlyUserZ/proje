@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration 
 @RequiredArgsConstructor 
-@EnableMethodSecurity 
+@EnableMethodSecurity(prePostEnabled = true) 
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
@@ -30,7 +30,8 @@ public class SecurityConfig {
                     "/", "/index.html", "/app.js", "/style.css", "/favicon.ico"
                 ).permitAll()
                 .requestMatchers("/login", "/refresh", "/register", "/api/kategori/goster/**", "/api/sorun/kategori/*" ).permitAll()              
-                .requestMatchers("/admin/**").hasRole("ADMIN")               
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/like/**").authenticated()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -38,7 +39,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
