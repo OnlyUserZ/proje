@@ -26,7 +26,7 @@ uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "sorun_id"})})
 public class SorunLike {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

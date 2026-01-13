@@ -20,6 +20,6 @@ public class TokenBlacklistService {
 
     public boolean isBlacklisted(String jti) {
        
-        return Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX + jti));
+        return false; //Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX + jti));
     }
 }

@@ -19,11 +19,11 @@ public class SorunDTO {
 	private String baslik;
 	
 	@NotBlank(message = "Sorun Bos Olamaz")
-	@Size(min = 1 , max = 600)
+	@Size(min = 1 , max = 600 , message = "Sorun Adı 1 ila 600 karakter arasında olmalı")
 	private String sorun;
 	
 	@NotBlank(message = "Cozum Bos Olamaz")
-	@Size(min = 1 , max = 600)
+	@Size(min = 1 , max = 600 , message = "Cozum adi 1 ila 600 karakter arasında olmalı")
 	private String cozum;
 	
 	@NotNull

@@ -35,7 +35,7 @@ import lombok.Setter;
 public class Kategori {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(unique = true , nullable = false)
