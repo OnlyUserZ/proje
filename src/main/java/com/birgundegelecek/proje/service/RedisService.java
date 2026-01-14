@@ -26,4 +26,5 @@ public class RedisService {
         	redisTemplate.opsForZSet().incrementScore(key, String.valueOf(event.getSorunId()), -1.0);
         }
     }
+    
 }

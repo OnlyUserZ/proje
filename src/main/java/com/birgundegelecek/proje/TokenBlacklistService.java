@@ -14,12 +14,11 @@ public class TokenBlacklistService {
     private static final String PREFIX = "blacklist:";
 
     public void blacklistToken(String jti, long expirationMillis) {
-       
         redisTemplate.opsForValue().set(PREFIX + jti, "true", Duration.ofMillis(expirationMillis));
     }
 
     public boolean isBlacklisted(String jti) {
-       
-        return false; //Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX + jti));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(PREFIX + jti));
     }
 }
+
