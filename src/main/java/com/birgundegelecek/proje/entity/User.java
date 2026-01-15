@@ -31,7 +31,7 @@ public class User {
 
     private String role; 
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = true)
 	private Set<SorunLike> sorunLikes;
 
 	

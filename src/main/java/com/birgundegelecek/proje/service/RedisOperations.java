@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 public class RedisOperations {
 	
 	private final RedisTemplate<String, String> redisTemplate;
-	private static final String AUTH_REQUEST = "user:";
+	private static final String AUTH_REQUEST = "login:user:";
 	private static final int MAX_REQUEST = 4;
 	
 	public boolean allowLogin(AuthRequest request) {
