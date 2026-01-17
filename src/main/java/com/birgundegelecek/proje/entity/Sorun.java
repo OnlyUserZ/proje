@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,16 @@ import lombok.Setter;
 public class Sorun {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(
+	        strategy = GenerationType.SEQUENCE,
+	        generator = "sorun_seq"
+	    )
+	    @SequenceGenerator(
+	        name = "sorun_seq",
+	        sequenceName = "sorun_sequence",
+	        allocationSize = 100
+	    )
+
 	private Long id;
 	
 	private String baslik;

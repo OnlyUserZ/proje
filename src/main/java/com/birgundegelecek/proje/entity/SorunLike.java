@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,16 @@ uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "sorun_id"})})
 public class SorunLike {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(
+	        strategy = GenerationType.SEQUENCE,
+	        generator = "sorunlike_seq"
+	    )
+	    @SequenceGenerator(
+	        name = "sorunlike_seq",
+	        sequenceName = "sorunlike_sequence",
+	        allocationSize = 100
+	    )
+
 	private Long id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

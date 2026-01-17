@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,16 @@ import lombok.Setter;
 public class Kategori {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(
+	        strategy = GenerationType.SEQUENCE,
+	        generator = "kategori_seq"
+	    )
+	    @SequenceGenerator(
+	        name = "kategori_seq",
+	        sequenceName = "kategori_sequence",
+	        allocationSize = 100
+	    )
+
 	private Long id;
 	
 	@Column(unique = true , nullable = false)
