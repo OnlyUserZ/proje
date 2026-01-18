@@ -33,7 +33,7 @@ public class Sorun {
 	    @SequenceGenerator(
 	        name = "sorun_seq",
 	        sequenceName = "sorun_sequence",
-	        allocationSize = 100
+	        allocationSize = 1
 	    )
 
 	private Long id;

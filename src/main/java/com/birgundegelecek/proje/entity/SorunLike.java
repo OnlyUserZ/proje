@@ -34,7 +34,7 @@ public class SorunLike {
 	    @SequenceGenerator(
 	        name = "sorunlike_seq",
 	        sequenceName = "sorunlike_sequence",
-	        allocationSize = 100
+	        allocationSize = 1
 	    )
 
 	private Long id;

@@ -27,7 +27,7 @@ public class User {
         @SequenceGenerator(
             name = "user_seq",
             sequenceName = "user_sequence",
-            allocationSize = 100
+            allocationSize = 1
         )
  
     private Long id;
@@ -40,7 +40,7 @@ public class User {
 
     private String role; 
 
-    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = true)
+    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , orphanRemoval = false)
 	private Set<SorunLike> sorunLikes;
 
 	

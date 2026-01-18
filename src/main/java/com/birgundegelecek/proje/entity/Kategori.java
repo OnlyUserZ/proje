@@ -43,7 +43,7 @@ public class Kategori {
 	    @SequenceGenerator(
 	        name = "kategori_seq",
 	        sequenceName = "kategori_sequence",
-	        allocationSize = 100
+	        allocationSize = 1
 	    )
 
 	private Long id;
@@ -51,7 +51,7 @@ public class Kategori {
 	@Column(unique = true , nullable = false)
 	private String ad;
 	
-	@OneToMany(mappedBy = "kategori" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "kategori" , cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = false)
 	private List<Sorun> sorunlar = new ArrayList<>();
 
 }

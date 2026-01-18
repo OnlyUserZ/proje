@@ -14,27 +14,42 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration 
-@RequiredArgsConstructor 
-@EnableMethodSecurity(prePostEnabled = true) 
+@Configuration
+@RequiredArgsConstructor
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
 
-    @Bean   
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth                
+
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/", "/index.html", "/app.js", "/style.css", "/favicon.ico"
+                    "/", 
+                    "/index.html", 
+                    "/app.js", 
+                    "/style.css", 
+                    "/favicon.ico"
                 ).permitAll()
-                .requestMatchers("/login", "/refresh", "/register", "/api/kategori/goster/**", "/api/sorun/kategori/*" ).permitAll()              
+                .requestMatchers(
+                    "/auth/login",
+                    "/auth/refresh",
+                    "/auth/register",
+                    "/api/kategori/goster/**",
+                    "/api/sorun/kategori/*"
+                ).permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/like/**").authenticated()
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            );
+
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -42,12 +57,13 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                   .userDetailsService(userDetailsService) 
-                   .passwordEncoder(passwordEncoder()) 
-                   .and()
-                   .build();
+
+        return http
+            .getSharedObject(AuthenticationManagerBuilder.class)
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder())
+            .and()
+            .build();
     }
 
     @Bean
@@ -55,4 +71,3 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 }
-

@@ -12,8 +12,8 @@ services:
     volumes:
       - postgresql_data:/var/lib/postgresql/data
     networks:
-      - drandt					  
-					  
+      - drandt
+
   redis:
     image: redis:7
     container_name: redis
