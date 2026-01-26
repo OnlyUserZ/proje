@@ -4,18 +4,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-
 import com.birgundegelecek.proje.dto.SorunLikeDTO;
 import com.birgundegelecek.proje.entity.Sorun;
 import com.birgundegelecek.proje.entity.SorunLike;
 import com.birgundegelecek.proje.entity.User;
-import com.birgundegelecek.proje.event.LikeEvent;
 import com.birgundegelecek.proje.exception.SorunBulunamadıException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
 import com.birgundegelecek.proje.repository.SorunLikeRepository;
 import com.birgundegelecek.proje.repository.SorunRepository;
 import com.birgundegelecek.proje.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,12 +26,15 @@ public class LikeService {
     private final SorunLikeRepository sorunLikeRepository;
     private final UserRepository userRepository;
     private final SorunRepository sorunRepository;
-    private final ApplicationEventPublisher publisher;
+   
 
+    
+    @Transactional
     public SorunLike likeEkle(SorunLikeDTO dto) {
 
         log.info("Like toggle işlemi başlatıldı. sorunId={}, userId={}", dto.getSorun_id(), dto.getUser_id());
-
+        
+        
         User user = userRepository.findById(dto.getUser_id())
                 .orElseThrow(() -> {
                     log.error("User bulunamadı. userId={}", dto.getUser_id());
@@ -52,7 +54,7 @@ public class LikeService {
             sorunLikeRepository.deleteBySorunAndUser(sorun, user);
 
             sorun.setLikeToplam(sorun.getLikeToplam() - 1);
-            publisher.publishEvent(new LikeEvent(this, sorun.getId(), false));
+          
 
             return null;
         }
@@ -64,11 +66,12 @@ public class LikeService {
         sorunLike.setUser(user);
 
         sorun.setLikeToplam(sorun.getLikeToplam() + 1);
-        publisher.publishEvent(new LikeEvent(this, sorun.getId(), true));
+        
 
         SorunLike saved = sorunLikeRepository.save(sorunLike);
         log.debug("Like kaydedildi: {}", saved);
 
         return saved;
+        
+        }
     }
-}

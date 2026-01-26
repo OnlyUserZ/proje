@@ -34,6 +34,7 @@ public class JwtFilter extends OncePerRequestFilter {
             || path.startsWith("/api/kategori/goster")
             || path.startsWith("/api/sorun/kategori");
     }
+    
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

@@ -34,7 +34,7 @@ public class SecurityConfig {
                     "/app.js", 
                     "/style.css", 
                     "/favicon.ico"
-                ).permitAll()
+                ).permitAll()                
                 .requestMatchers(
                     "/auth/login",
                     "/auth/refresh",

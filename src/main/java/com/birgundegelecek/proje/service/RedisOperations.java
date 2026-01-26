@@ -1,5 +1,6 @@
 package com.birgundegelecek.proje.service;
 
+import java.lang.System.Logger;
 import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,9 +9,11 @@ import org.springframework.stereotype.Service;
 import com.birgundegelecek.proje.AuthRequest;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RedisOperations {
 
     private final RedisTemplate<String, String> redisTemplate;
@@ -31,6 +34,8 @@ public class RedisOperations {
             return count != null && count <= MAX_REQUEST;
 
         } catch (Exception e) {
+        	
+        	log.error("Process failed , reason = {}", e.getMessage());
             
             return true;
         }
