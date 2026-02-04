@@ -2,95 +2,55 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Auth Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BirGundeGelecek</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="auth-container">
+        <h1>Giriş Yap / Kayıt Ol</h1>
+        <div id="login-form">
+            <h2>Login</h2>
+            <input type="text" id="login-username" placeholder="Kullanıcı Adı">
+            <input type="password" id="login-password" placeholder="Şifre">
+            <button id="login-btn">Giriş Yap</button>
+        </div>
 
-<h2>LOGIN</h2>
-<input id="loginUsername" placeholder="Username">
-<input id="loginPassword" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
+        <div id="register-form">
+            <h2>Register</h2>
+            <input type="text" id="register-username" placeholder="Kullanıcı Adı">
+            <input type="password" id="register-password" placeholder="Şifre">
+            <button id="register-btn">Kayıt Ol</button>
+        </div>
+    </div>
 
-<hr>
+    <div id="admin-panel" class="hidden">
+        <h1>Admin Panel</h1>
+        <h2>Kategori Ekle</h2>
+        <input type="text" id="kategori-ad" placeholder="Kategori Adı">
+        <button id="kategori-ekle-btn">Ekle</button>
 
-<h2>REGISTER</h2>
-<input id="regUsername" placeholder="Username">
-<input id="regPassword" type="password" placeholder="Password">
-<button onclick="register()">Register</button>
+        <h2>Sorun Ekle</h2>
+        <input type="text" id="sorun-baslik" placeholder="Başlık">
+        <textarea id="sorun-icerik" placeholder="Sorun"></textarea>
+        <textarea id="sorun-cozum" placeholder="Çözüm"></textarea>
+        <input type="number" id="sorun-kategori-id" placeholder="Kategori ID">
+        <button id="sorun-ekle-btn">Sorun Ekle</button>
 
-<hr>
+        <button id="logout-btn">Çıkış Yap</button>
+    </div>
 
-<h2>CHANGE PASSWORD</h2>
-<input id="oldPassword" type="password" placeholder="Old Password">
-<input id="newPassword" type="password" placeholder="New Password">
-<button onclick="changePassword()">Change Password</button>
+    <div id="user-panel" class="hidden">
+        <h1>Kullanıcı Paneli</h1>
+        <h2>Kategoriler</h2>
+        <ul id="kategori-list"></ul>
 
-<hr>
+        <h2>Sorunlar</h2>
+        <ul id="sorun-list"></ul>
 
-<h2>LOGOUT</h2>
-<button onclick="logout()">Logout</button>
+        <button id="logout-btn-user">Çıkış Yap</button>
+    </div>
 
-<script>
-    const API = "http://localhost:8080/auth";
-
-    function login() {
-        fetch(API + "/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: document.getElementById("loginUsername").value,
-                password: document.getElementById("loginPassword").value
-            })
-        })
-        .then(r => r.json())
-        .then(data => {
-            localStorage.setItem("accessToken", data.accessToken);
-            localStorage.setItem("refreshToken", data.refreshToken);
-            alert("Login başarılı");
-        });
-    }
-
-    function register() {
-        fetch(API + "/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: document.getElementById("regUsername").value,
-                password: document.getElementById("regPassword").value
-            })
-        })
-        .then(() => alert("Kayıt başarılı"));
-    }
-
-    function changePassword() {
-        fetch(API + "/change-password", {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("accessToken")
-            },
-            body: JSON.stringify({
-                oldPassword: document.getElementById("oldPassword").value,
-                newPassword: document.getElementById("newPassword").value
-            })
-        })
-        .then(() => alert("Şifre değişti"));
-    }
-
-    function logout() {
-        fetch(API + "/logout", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                refreshToken: localStorage.getItem("refreshToken")
-            })
-        })
-        .then(() => {
-            localStorage.clear();
-            alert("Çıkış yapıldı");
-        });
-    }
-</script>
-
+    <script src="app.js"></script>
 </body>
 </html>
