@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -13,7 +15,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody @Valid AuthRequest request) {
         AuthResponse response = authService.login(request);
         log.info("Login başarılı. username={}", request.getUsername());
         return ResponseEntity.ok(response);
@@ -27,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterRequest request) {
         authService.register(request);
         log.info("Kayıt başarılı. username={}", request.getUsername());
         return ResponseEntity.ok("Kayıt başarıyla tamamlandı.");
@@ -41,7 +43,7 @@ public class AuthController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ResetPasswordRequest request) {
         authService.changePassword(request);
         log.info("Şifre başarıyla değiştirildi.");
         return ResponseEntity.ok("Şifre başarıyla değiştirildi.");

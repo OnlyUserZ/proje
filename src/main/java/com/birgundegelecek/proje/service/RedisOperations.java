@@ -29,6 +29,7 @@ public class RedisOperations {
 
             if (count != null && count == 1) {
                 redisTemplate.expire(key, Duration.ofSeconds(60));
+            
             }
 
             return count != null && count <= MAX_REQUEST;

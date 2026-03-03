@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "username")})
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,25 +23,22 @@ public class User {
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator = "user_seq"
-        )
-        @SequenceGenerator(
+    )
+    @SequenceGenerator(
             name = "user_seq",
             sequenceName = "user_sequence",
             allocationSize = 1
-        )
- 
+    )
     private Long id;
 
-    @Column(unique = true, nullable = false) 
+    @Column(unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false) 
+    @Column(nullable = false)
     private String password;
 
-    private String role; 
+    private String role;
 
-    @OneToMany(mappedBy = "user" , fetch = FetchType.LAZY , orphanRemoval = false)
-	private Set<SorunLike> sorunLikes;
-
-	
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = false)
+    private Set<SorunLike> sorunLikes;
 }
