@@ -2,14 +2,19 @@ package com.birgundegelecek.proje.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
+import org.hibernate.type.TrueFalseConverter;
+
+import com.birgundegelecek.proje.status.UserStatus;
 
 @Entity
 @Table(name = "users")
@@ -17,6 +22,11 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
+@SoftDelete(
+        strategy = SoftDeleteType.DELETED,
+        columnName = "deleted"     
+)
 public class User {
 
     @Id
@@ -37,8 +47,13 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private String role;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = false)
-    private Set<SorunLike> sorunLikes;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+    
+    @OneToMany(mappedBy = "sahip" , fetch = FetchType.LAZY , orphanRemoval = true)
+    private List<Siparis> siparisler = new ArrayList<>();
+    
+    @OneToOne(mappedBy = "user" , fetch = FetchType.LAZY , orphanRemoval = true , cascade = CascadeType.ALL)
+    private UserSepet userSepet;
 }

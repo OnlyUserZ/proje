@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.birgundegelecek.proje.exception.KategoriBulunamadıException;
 import com.birgundegelecek.proje.exception.RateLimitException;
-import com.birgundegelecek.proje.exception.SorunBulunamadıException;
-import com.birgundegelecek.proje.exception.SorunLikeBulunamadıException;
+import com.birgundegelecek.proje.exception.UrunBulunamadiException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -45,11 +44,10 @@ public class GlobalExceptionHandler {
     }
     
     @ExceptionHandler({UserBulunamadıException.class,
-        KategoriBulunamadıException.class,
-        SorunBulunamadıException.class,
-        SorunLikeBulunamadıException.class})
-        public ResponseEntity<String> handleNotFound(RuntimeException ex) {
-              return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                       KategoriBulunamadıException.class,
+                       UrunBulunamadiException.class})
+     public ResponseEntity<String> handleNotFound(RuntimeException ex) {
+       return ResponseEntity.status(HttpStatus.NOT_FOUND)
                .body(ex.getMessage());
 }
     

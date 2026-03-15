@@ -1,21 +1,20 @@
 package com.birgundegelecek.proje.entity;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import org.hibernate.type.TrueFalseConverter;
-
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,13 +25,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(
-	    name = "kategori",
-	    uniqueConstraints = {
-	        @UniqueConstraint(columnNames = "ad")
-	    }
-	)
-
+@Table(name = "kategori")
+@SoftDelete(strategy = SoftDeleteType.DELETED , columnName = "deleted")
 public class Kategori {
 	
 	@Id
@@ -51,7 +45,9 @@ public class Kategori {
 	@Column(unique = true , nullable = false)
 	private String ad;
 	
-	@OneToMany(mappedBy = "kategori" , cascade = CascadeType.ALL , fetch = FetchType.LAZY , orphanRemoval = false)
-	private List<Sorun> sorunlar = new ArrayList<>();
+	@ManyToMany(mappedBy = "kategoriler" , cascade = CascadeType.ALL)
+	private Set<Urun> urunler = new HashSet<>();
+	
+	
 
 }

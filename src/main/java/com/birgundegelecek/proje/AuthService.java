@@ -4,15 +4,20 @@ import com.birgundegelecek.proje.entity.User;
 import com.birgundegelecek.proje.exception.RateLimitException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
 import com.birgundegelecek.proje.repository.UserRepository; 
-import com.birgundegelecek.proje.service.RedisOperations; 
+import com.birgundegelecek.proje.service.RedisOperations;
+import com.birgundegelecek.proje.status.UserStatus;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j; 
 import org.springframework.security.authentication.AuthenticationManager; 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails; 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 import java.util.UUID;
 
 @Service
@@ -44,7 +49,7 @@ public class AuthService {
 
             String accessToken = jwtUtil.generateAccessToken(userDetails);
             String refreshToken = jwtUtil.generateRefreshToken(userDetails, refreshTokenId);
-
+  
             log.info("Authentication successful. username={}", request.getUsername());
 
             return new AuthResponse(accessToken, refreshToken);
@@ -100,13 +105,13 @@ public class AuthService {
         User newUser = new User();
         newUser.setUsername(request.getUsername());
         newUser.setPassword(passwordEncoder.encode(request.getPassword()));
-        newUser.setRole("USER");
+        newUser.setStatus(UserStatus.USER);
 
         userRepository.save(newUser);
 
         log.info("User successfully registered. username={}, role={}",
                 newUser.getUsername(),
-                newUser.getRole()
+                newUser.getStatus()
         );
     }
 
