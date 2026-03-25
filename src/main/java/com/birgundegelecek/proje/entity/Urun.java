@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.SoftDeleteType;
 
@@ -31,6 +32,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @SoftDelete(strategy = SoftDeleteType.DELETED , columnName = "deleted")
 @DynamicUpdate
+
 public class Urun {
 	
 	@Id
@@ -56,6 +58,15 @@ public class Urun {
 	@Column(nullable = false)
 	private int stok = 0;
 	
+	@Column(name = "rezerve_stok",nullable = false)
+	private int rezerveStok = 0;
+	
+	@Column(nullable = false)
+	private int aktifStok;
+	
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted = false;
+	
 	@OneToMany(mappedBy = "urun")
 	private Set<SiparisUrun> siparisUrun = new HashSet<>();
 	
@@ -66,8 +77,11 @@ public class Urun {
 	)
 	private Set<Kategori> kategoriler = new HashSet<>();
 	
-	@OneToMany
+	@OneToMany(mappedBy = "urun")
 	private Set<SepetUrun> sepetUruns = new HashSet<>();
 	
+	public int getAktifStok() {
+		return stok - rezerveStok;
+	}
 	
 }

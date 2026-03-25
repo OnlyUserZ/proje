@@ -167,4 +167,28 @@ public class AuthService {
 
         log.info("Password successfully changed. username={}, token invalidated", username);
     }
+    
+    @Transactional
+    public void hesabımıSil(String refreshToken) {
+    	
+    	String token = refreshToken;
+    	
+    	if (jwtUtil.isTokenExpired(token)) {
+    		throw new RuntimeException("Hesabınız token süreniz dolduğu için silinemedi");
+    		
+    	}
+    	
+    	String jti = jwtUtil.extractTokenId(token);
+    	
+    	if(tokenBlacklistService.isBlacklisted(jti)) {
+    		throw new RuntimeException("Token Kara Listede");
+    		
+    	}
+    	
+    	String username = jwtUtil.extractUsername(token);
+    	
+    	userRepository.deleteByUsername(username);
+    	
+    	tokenBlacklistService.blacklistToken(jti, 1000L * 60 * 60 * 24);
+    }
 }

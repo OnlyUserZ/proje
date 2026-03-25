@@ -36,7 +36,7 @@ public class KategoriService {
 
         log.info("Kategori oluşturma isteği alındı: {}", request.getAd());
 
-        if (kategoriRepository.existsByAd(request.getAd())) {
+        if (kategoriRepository.existsByAdAndDeletedFalse(request.getAd())) {
             log.warn("Kategori zaten mevcut: {}", request.getAd());
             throw new RuntimeException("Kategori zaten var");
         }

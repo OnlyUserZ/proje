@@ -1,11 +1,14 @@
 package com.birgundegelecek.proje.entity;
 
+import java.math.BigDecimal;
+
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.hibernate.annotations.SoftDelete;
 import org.hibernate.annotations.SoftDeleteType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +36,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @SoftDelete(strategy = SoftDeleteType.DELETED, columnName = "deleted")
 @DynamicUpdate
-@Where(clause = "deleted = false") 
 public class SepetUrun {
 	
 	@Id
@@ -55,5 +57,12 @@ public class SepetUrun {
 	@ManyToOne
 	@JoinColumn(name = "urun_id")
 	private Urun urun;
+	
+	@Column(nullable = false)
+	private int adet;
+	
+	@Column(name = "toplam_fiyat" , nullable = false)
+	private BigDecimal toplamFiyat;
+	
 
 }

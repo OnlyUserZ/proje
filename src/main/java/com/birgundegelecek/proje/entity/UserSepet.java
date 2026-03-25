@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@SoftDelete(strategy = SoftDeleteType.DELETED , columnName = "deleted")
+
 @DynamicUpdate
 public class UserSepet {
 	
@@ -50,7 +50,7 @@ public class UserSepet {
 	@Column(nullable = false)
 	private BigDecimal toplam_fiyat;
 	
-	@OneToMany
+	@OneToMany(mappedBy = "userSepet")
 	private Set<SepetUrun> sepetUruns = new HashSet<>();
 	
 	

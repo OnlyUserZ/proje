@@ -25,7 +25,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @DynamicUpdate
-@SoftDelete(strategy = SoftDeleteType.DELETED , columnName = "deleted")
 public class SiparisUrun {
 	
 	@Id

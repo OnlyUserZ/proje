@@ -23,10 +23,6 @@ import com.birgundegelecek.proje.status.UserStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicUpdate
-@SoftDelete(
-        strategy = SoftDeleteType.DELETED,
-        columnName = "deleted"     
-)
 public class User {
 
     @Id
@@ -51,7 +47,7 @@ public class User {
     @Column(nullable = false)
     private UserStatus status;
     
-    @OneToMany(mappedBy = "sahip" , fetch = FetchType.LAZY , orphanRemoval = true)
+    @OneToMany(mappedBy = "sahip" , fetch = FetchType.LAZY)
     private List<Siparis> siparisler = new ArrayList<>();
     
     @OneToOne(mappedBy = "user" , fetch = FetchType.LAZY , orphanRemoval = true , cascade = CascadeType.ALL)

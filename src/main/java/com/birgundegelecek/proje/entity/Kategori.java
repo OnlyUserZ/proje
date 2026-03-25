@@ -45,9 +45,10 @@ public class Kategori {
 	@Column(unique = true , nullable = false)
 	private String ad;
 	
-	@ManyToMany(mappedBy = "kategoriler" , cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "kategoriler")
 	private Set<Urun> urunler = new HashSet<>();
 	
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted = false;
 	
-
 }

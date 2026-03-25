@@ -59,5 +59,8 @@ public class Siparis {
 	
 	@Enumerated(EnumType.STRING)
 	private SiparisStatus status;
+	
+	@Column(name = "deleted", nullable = false)
+	private boolean deleted = false;
 
 }
