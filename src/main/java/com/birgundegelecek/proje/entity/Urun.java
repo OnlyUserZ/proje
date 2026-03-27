@@ -20,6 +20,7 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -57,6 +58,9 @@ public class Urun {
 	
 	@Column(nullable = false)
 	private int stok = 0;
+	
+	@Version
+	private Long version;
 	
 	@Column(name = "rezerve_stok",nullable = false)
 	private int rezerveStok = 0;

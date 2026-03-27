@@ -3,6 +3,8 @@ package com.birgundegelecek.proje.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.birgundegelecek.proje.entity.User;
@@ -15,4 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String username);
 	
 	void deleteByUsername(String username);
+	
+	@Query("SELECT u FROM User u JOIN FETCH u.userSepet WHERE u.id = :id")
+	Optional<User> findByIdWithUserSepet(@Param("id") Long id);
 }
