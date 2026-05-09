@@ -28,4 +28,7 @@ public interface SepetUrunRepository extends JpaRepository<SepetUrun, Long> {
 		Optional<SepetUrun> findByIdAndUserId(@Param("id") Long sepetUrunId, 
 		                                      @Param("userId") Long userId);
 
+	List<SepetUrun> findByUserSepet(UserSepet userSepet);
+	
+	
 }

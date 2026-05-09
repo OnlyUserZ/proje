@@ -16,6 +16,10 @@ public class CustomUserDetails implements UserDetails {
     private final String username;
     private final String password;
     private final Collection<? extends GrantedAuthority> authorities;
+    
+    public Long getId() {
+    	return id;
+    }
 
     @Override
     public boolean isAccountNonExpired() {

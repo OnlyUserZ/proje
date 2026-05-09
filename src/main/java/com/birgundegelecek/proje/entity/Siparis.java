@@ -1,5 +1,6 @@
 package com.birgundegelecek.proje.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,6 +50,9 @@ public class Siparis {
 	
 	@Column(nullable = false)
 	private LocalDateTime created_at;
+	
+	@Column(nullable = false)
+	private BigDecimal toplamFiyat;
 	
 	@ManyToOne
 	@JoinColumn(name = "sahip")

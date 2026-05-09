@@ -11,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.birgundegelecek.proje.entity.Urun;
+import com.birgundegelecek.proje.entity.SepetUrun;
+import java.util.Set;
+
 
 @Repository
 public interface UrunRepository extends JpaRepository<Urun, Long> {
@@ -19,4 +22,6 @@ public interface UrunRepository extends JpaRepository<Urun, Long> {
 	Page<Urun> findByKategori_id(@Param("id") Long id , Pageable pageable);
 	
 	Optional<Urun> findById(long id);
-}
+	
+	
+} 

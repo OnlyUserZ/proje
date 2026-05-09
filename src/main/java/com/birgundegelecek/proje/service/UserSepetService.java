@@ -1,14 +1,12 @@
 package com.birgundegelecek.proje.service;
 
 import java.math.BigDecimal;
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
-
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import com.birgundegelecek.proje.dto.SepetUrunResponse;
 import com.birgundegelecek.proje.dto.UserSepetResponse;
@@ -19,11 +17,12 @@ import com.birgundegelecek.proje.entity.UserSepet;
 import com.birgundegelecek.proje.exception.SepetUrunBulunamadıException;
 import com.birgundegelecek.proje.exception.UrunBulunamadiException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
+import com.birgundegelecek.proje.exception.UserSepetBulunamadiException;
+import com.birgundegelecek.proje.exception.YetersizMiktarException;
 import com.birgundegelecek.proje.repository.SepetUrunRepository;
 import com.birgundegelecek.proje.repository.UrunRepository;
 import com.birgundegelecek.proje.repository.UserRepository;
 import com.birgundegelecek.proje.repository.UserSepetRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,210 +31,178 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class UserSepetService {
-	
-	private final SepetUrunRepository sepetUrunRepository;
-	private final UserSepetRepository userSepetRepository;
-	private final UrunRepository urunRepository;
-	private final UserRepository userRepository;
-	private final StringRedisTemplate redisTemplate;
-	private final ObjectMapper objectMapper;
-	
-	@Transactional
-	public SepetUrunResponse sepeteUrunEkle(Long userId, Long urunId) {
 
-	    log.info("Sepete ürün ekleme başlatıldı: userId={}, urunId={}", userId, urunId);
+    private final SepetUrunRepository sepetUrunRepository;
+    private final UserSepetRepository userSepetRepository;
+    private final UrunRepository urunRepository;
+    private final UserRepository userRepository;
 
-	    User user = userRepository.findById(userId)
-	        .orElseThrow(() -> {
-	            log.error("User bulunamadı: userId={}", userId);
-	            return new UserBulunamadıException("User bulunamadı");
-	        });
-	    log.info("User bulundu: userId={}", userId);
+    @Transactional
+    public SepetUrunResponse sepeteUrunEkle(Long userId, Long urunId) {
+        log.info("Sepete ürün ekleme başlatıldı: userId={}, urunId={}", userId, urunId);
 
-	    Urun urun = urunRepository.findById(urunId)
-	        .orElseThrow(() -> {
-	            log.error("Ürün bulunamadı: urunId={}", urunId);
-	            return new UrunBulunamadiException("Ürün bulunamadı");
-	        });
-	    log.info("Ürün bulundu: urunId={}, urunAd={}", urunId, urun.getAd());
+        User user = userRepository.findByIdWithUserSepet(userId)
+                .orElseThrow(() -> new UserBulunamadıException("User bulunamadı"));
 
-	    UserSepet userSepet = userSepetRepository.findByUser(user)
-	        .orElseGet(() -> {
-	            UserSepet yeniSepet = new UserSepet();
-	            yeniSepet.setUser(user);
-	            yeniSepet.setToplam_fiyat(BigDecimal.ZERO);
-	            UserSepet kaydedilenSepet = userSepetRepository.save(yeniSepet);
-	            log.info("Yeni sepet oluşturuldu: userId={}, sepetId={}", userId, kaydedilenSepet.getId());
-	            return kaydedilenSepet;
-	        });
+        Urun urun = urunRepository.findById(urunId)
+                .orElseThrow(() -> new UrunBulunamadiException("Ürün bulunamadı"));
 
-	    SepetUrun sepetUrun = sepetUrunRepository
-	        .findByUserSepetAndUrun(userSepet, urun)
-	        .orElse(null);
+        UserSepet userSepet = user.getUserSepet();
+        if (userSepet == null) {
+            userSepet = new UserSepet();
+            userSepet.setUser(user);
+            userSepet.setToplam_fiyat(BigDecimal.ZERO);
+            userSepet = userSepetRepository.save(userSepet);
+            user.setUserSepet(userSepet);
+            log.info("Yeni sepet oluşturuldu: userId={}, sepetId={}", userId, userSepet.getId());
+        }
 
-	    if (sepetUrun != null) {
-	        log.info("Sepette ürün mevcut, adet ve fiyat güncelleniyor: sepetUrunId={}", sepetUrun.getId());
-	        
-	        sepetUrun.setAdet(sepetUrun.getAdet() + 1);
+        if (!userSepet.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Bu sepete erişim yetkiniz yok");
+        }
 
-	        BigDecimal yeniToplam = sepetUrun.getToplamFiyat()
-	            .add(urun.getFiyat());
+        SepetUrun sepetUrun = sepetUrunRepository
+                .findByUserSepetAndUrun(userSepet, urun)
+                .orElse(null);
 
-	        sepetUrun.setToplamFiyat(yeniToplam);
+        if (sepetUrun != null) {
+            sepetUrun.setAdet(sepetUrun.getAdet() + 1);
+            sepetUrun.setToplamFiyat(sepetUrun.getToplamFiyat().add(urun.getFiyat()));
+            log.info("Sepet ürünü güncellendi: sepetUrunId={}, yeniAdet={}, yeniToplamFiyat={}",
+                    sepetUrun.getId(), sepetUrun.getAdet(), sepetUrun.getToplamFiyat());
+        } else {
+            sepetUrun = new SepetUrun();
+            sepetUrun.setAdet(1);
+            sepetUrun.setUrun(urun);
+            sepetUrun.setUserSepet(userSepet);
+            sepetUrun.setToplamFiyat(urun.getFiyat());
+            userSepet.getSepetUruns().add(sepetUrun);
+            log.info("Yeni SepetUrun sepete eklendi: urunId={}, sepetId={}", urunId, userSepet.getId());
+        }
 
-	        log.info("Sepet ürünü güncellendi: sepetUrunId={}, yeniAdet={}, yeniToplam={}",
-	                sepetUrun.getId(), sepetUrun.getAdet(), sepetUrun.getToplamFiyat());
+        userSepet.setToplam_fiyat(userSepet.getToplam_fiyat().add(urun.getFiyat()));
 
-	    } else {
-	        log.info("Sepette ürün yok, yeni SepetUrun oluşturuluyor: urunId={}", urunId);
-	        
-	        sepetUrun = new SepetUrun();
-	        sepetUrun.setAdet(1);
-	        sepetUrun.setUrun(urun);
-	        sepetUrun.setUserSepet(userSepet);
-	        sepetUrun.setToplamFiyat(urun.getFiyat());
+        sepetUrunRepository.save(sepetUrun);
+        userSepetRepository.save(userSepet);
 
-	        userSepet.getSepetUruns().add(sepetUrun);
+        log.info("Sepet ve SepetUrun kaydedildi: sepetId={}, sepetUrunId={}", userSepet.getId(), sepetUrun.getId());
 
-	        log.info("Yeni SepetUrun sepete eklendi: urunId={}, sepetId={}", urunId, userSepet.getId());
-	    }
+        return new SepetUrunResponse(sepetUrun.getId(), sepetUrun.getAdet(), sepetUrun.getToplamFiyat(), urun.getAd());
+    }
 
-	    BigDecimal eskiToplamSepet = userSepet.getToplam_fiyat();
-	    userSepet.setToplam_fiyat(
-	        userSepet.getToplam_fiyat().add(urun.getFiyat())
-	    );
-	    log.info("Sepet toplam fiyat güncellendi: sepetId={}, eskiToplam={}, yeniToplam={}",
-	            userSepet.getId(), eskiToplamSepet, userSepet.getToplam_fiyat());
+    @Transactional
+    public SepetUrunResponse sepettenUrunSil(Long userId, Long sepetUrunId) {
+        log.info("Sepetten ürün silme başlatıldı: userId={}, sepetUrunId={}", userId, sepetUrunId);
 
-	    sepetUrunRepository.save(sepetUrun);
-	    userSepetRepository.save(userSepet);
-	    log.info("Sepet ve SepetUrun DB'ye kaydedildi: sepetId={}, sepetUrunId={}", userSepet.getId(), sepetUrun.getId());
+        SepetUrun sepetUrun = sepetUrunRepository.findById(sepetUrunId)
+                .orElseThrow(() -> new SepetUrunBulunamadıException("SepetUrun Bulunamadı"));
 
-	    return new SepetUrunResponse(
-	        sepetUrun.getId(),
-	        sepetUrun.getAdet(),
-	        sepetUrun.getToplamFiyat(),
-	        urun.getAd()
-	    );
-	}
-	
-	@Transactional
-	public SepetUrunResponse sepettenUrunSil(Long userId, Long sepeturunId) {
+        UserSepet userSepet = sepetUrun.getUserSepet();
 
-	    log.info("Sepetten ürün silme başlatıldı: userId={}, sepetUrunId={}", userId, sepeturunId);
+        if (!userSepet.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Bu sepete erişim yetkiniz yok");
+        }
 
-	    SepetUrun sepetUrun = sepetUrunRepository
-	            .findByIdAndUserId(sepeturunId, userId)
-	            .orElseThrow(() -> {
-	                log.error("SepetUrun bulunamadı: userId={}, sepetUrunId={}", userId, sepeturunId);
-	                return new SepetUrunBulunamadıException("SepetUrun Bulunamadı");
-	            });
+        int mevcutAdet = sepetUrun.getAdet();
 
-	    log.info("SepetUrun bulundu: id={}, mevcutAdet={}", sepetUrun.getId(), sepetUrun.getAdet());
+        if (mevcutAdet <= 0) {
+            throw new IllegalStateException("Sepet ürün adedi zaten 0 veya hatalı");
+        }
 
-	    if (!sepetUrun.getUserSepet().getUser().getId().equals(userId)) {
-	        log.error("Yetkisiz işlem: userId={}, sepetUrunId={}", userId, sepeturunId);
-	        throw new AccessDeniedException("Değiştirmeye çalıştığınız sepet sizin değil");
-	    }
+        if (mevcutAdet == 1) {
+            sepetUrunRepository.delete(sepetUrun);
+            userSepet.setToplam_fiyat(userSepet.getToplam_fiyat().subtract(sepetUrun.getToplamFiyat()));
+            userSepetRepository.save(userSepet);
 
-	    int mevcutAdet = sepetUrun.getAdet();
+            return new SepetUrunResponse(sepetUrunId, 0, BigDecimal.ZERO, sepetUrun.getUrun().getAd());
+        }
 
-	    if (mevcutAdet <= 0) {
-	        log.error("Hatalı adet durumu: sepetUrunId={}, adet={}", sepeturunId, mevcutAdet);
-	        throw new IllegalStateException("Sepet ürün adedi zaten 0 veya hatalı");
-	    }
+        sepetUrun.setAdet(mevcutAdet - 1);
+        sepetUrun.setToplamFiyat(sepetUrun.getToplamFiyat().subtract(sepetUrun.getUrun().getFiyat()));
 
-	    if (mevcutAdet == 1) {
-	        log.info("Son ürün, siliniyor: sepeturunId={}", sepeturunId);
+        userSepet.setToplam_fiyat(userSepet.getToplam_fiyat().subtract(sepetUrun.getUrun().getFiyat()));
+        sepetUrunRepository.save(sepetUrun);
+        userSepetRepository.save(userSepet);
 
-	        sepetUrunRepository.delete(sepetUrun);
-	        
-	        redisTemplate.delete("user:" + userId);
+        return new SepetUrunResponse(sepetUrunId, sepetUrun.getAdet(), sepetUrun.getToplamFiyat(), sepetUrun.getUrun().getAd());
+    }
 
-	        return new SepetUrunResponse(
-	                sepeturunId,
-	                0,
-	                BigDecimal.ZERO,
-	                sepetUrun.getUrun().getAd()
-	        );
-	    }
+    @Transactional(readOnly = true)
+    public UserSepetResponse sepetiGoster(Long userId) {
+        User user = userRepository.findByIdWithUserSepet(userId)
+                .orElseThrow(() -> new UserBulunamadıException("User Bulunamadı"));
 
-	    int yeniAdet = mevcutAdet - 1;
-	    sepetUrun.setAdet(yeniAdet);
+        UserSepet userSepet = user.getUserSepet();
 
-	    BigDecimal yeniToplamFiyat = sepetUrun.getToplamFiyat()
-	            .subtract(sepetUrun.getUrun().getFiyat());
+        if (!userSepet.getUser().getId().equals(userId)) {
+            throw new AccessDeniedException("Bu sepete erişim yetkiniz yok");
+        }
 
-	    sepetUrun.setToplamFiyat(yeniToplamFiyat);
+        return new UserSepetResponse(userSepet.getId(), user, userSepet.getToplam_fiyat(), userSepet.getSepetUruns());
+    }
+    
+    @Transactional
+    public UserSepetResponse sepetiKontrolEt(Long userId) {
 
-	    log.info("SepetUrun güncellendi: sepetUrunId={}, eskiAdet={}, yeniAdet={}, yeniToplamFiyat={}",
-	            sepeturunId, mevcutAdet, yeniAdet, yeniToplamFiyat);
+        User user = userRepository.findByIdWithUserSepet(userId)
+                .orElseThrow(() ->
+                        new UserBulunamadıException("User bulunamadı"));
 
-	    return new SepetUrunResponse(
-	            sepeturunId,
-	            yeniAdet,
-	            yeniToplamFiyat,
-	            sepetUrun.getUrun().getAd()
-	    );
-	}
-	
-	@Transactional(readOnly = true)
-	public UserSepetResponse sepetiGoster(Long userId) {
+        UserSepet userSepet = user.getUserSepet();
 
-	    String key = "sepet:" + userId;
+        if (userSepet == null) {
+            throw new UserSepetBulunamadiException("Sepet bulunamadı");
+        }
 
-	    log.info("Sepet gösterme başlatıldı: userId={}", userId);
+        userSepet = userSepetRepository
+                .findByIdWithSepetUrunsAndUrun(userSepet.getId())
+                .orElseThrow(() ->
+                        new UserSepetBulunamadiException("Sepet bulunamadı"));
 
-	    try {
-	        String cached = redisTemplate.opsForValue().get(key);
+        List<SepetUrun> silinecekler = new ArrayList<>();
 
-	        if (cached != null && !cached.isEmpty()) {
-	            log.info("Cache hit: userId={}", userId);
-	            return objectMapper.readValue(cached, UserSepetResponse.class);
-	        }
+        BigDecimal yeniToplamFiyat = BigDecimal.ZERO;
 
-	        log.info("Cache miss: userId={}", userId);
+        for (SepetUrun sepetUrun : userSepet.getSepetUruns()) {
 
-	    } catch (Exception e) {
-	        log.error("Redis read error: userId={}", userId, e);
-	    }
+            Urun urun = sepetUrun.getUrun();
 
-	    User user = userRepository.findByIdWithUserSepet(userId)
-	            .orElseThrow(() -> {
-	                log.error("User bulunamadı: userId={}", userId);
-	                return new UserBulunamadıException("User Bulunamadı");
-	            });
+            int stok = urun.getStok();
+            int mevcutAdet = sepetUrun.getAdet();
 
-	    log.info("User bulundu: userId={}", userId);
+            if (stok <= 0) {
 
-	    UserSepet userSepet = user.getUserSepet();
+                silinecekler.add(sepetUrun);
 
-	    if (!userSepet.getUser().getId().equals(userId)) {
-	        log.error("Yetkisiz sepet erişimi: userId={}", userId);
-	        throw new AccessDeniedException("Değiştirmeye çalıştığınız sepet sizin değil");
-	    }
+                continue;
+            }
 
-	    UserSepetResponse response = new UserSepetResponse(
-	            userSepet.getId(),
-	            user,
-	            userSepet.getToplam_fiyat(),
-	            userSepet.getSepetUruns()
-	    );
+            if (stok < mevcutAdet) {
 
-	    try {
-	        redisTemplate.opsForValue().set(
-	                key,
-	                objectMapper.writeValueAsString(response),
-	                Duration.ofMinutes(5)
-	        );
+                sepetUrun.setAdet(stok);
 
-	        log.info("Cache write başarılı: userId={}", userId);
+                sepetUrun.setToplamFiyat(
+                        urun.getFiyat().multiply(BigDecimal.valueOf(stok))
+                );
+            }
 
-	    } catch (Exception e) {
-	        log.error("Redis write error: userId={}", userId, e);
-	    }
+            yeniToplamFiyat =
+                    yeniToplamFiyat.add(sepetUrun.getToplamFiyat());
+        }
 
-	    return response;
-	}
+        for (SepetUrun s : silinecekler) {
+            userSepet.getSepetUruns().remove(s);
+            sepetUrunRepository.delete(s);
+        }
 
+        userSepet.setToplam_fiyat(yeniToplamFiyat);
+
+        return new UserSepetResponse(
+                userSepet.getId(),
+                userSepet.getUser(),
+                userSepet.getToplam_fiyat(),
+                userSepet.getSepetUruns()
+        );
+    }
+    	
 }

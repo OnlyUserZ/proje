@@ -1,6 +1,5 @@
 package com.birgundegelecek.proje.service;
 
-import java.lang.System.Logger;
 import java.time.Duration;
 
 import org.springframework.data.redis.core.RedisTemplate;

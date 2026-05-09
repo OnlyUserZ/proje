@@ -39,6 +39,9 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String username;
+    
+    @Version
+    private Long version;
 
     @Column(nullable = false)
     private String password;
@@ -52,4 +55,7 @@ public class User {
     
     @OneToOne(mappedBy = "user" , fetch = FetchType.LAZY , orphanRemoval = true , cascade = CascadeType.ALL)
     private UserSepet userSepet;
+    
+    @OneToOne(mappedBy = "adresSahibi" , cascade = CascadeType.ALL , orphanRemoval = true , fetch = FetchType.LAZY)
+    private Adres adres;
 }

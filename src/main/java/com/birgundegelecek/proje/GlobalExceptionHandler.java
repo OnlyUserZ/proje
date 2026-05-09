@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.birgundegelecek.proje.exception.KategoriBulunamadıException;
 import com.birgundegelecek.proje.exception.RateLimitException;
+import com.birgundegelecek.proje.exception.UnauthorizedException;
 import com.birgundegelecek.proje.exception.UrunBulunamadiException;
 import com.birgundegelecek.proje.exception.UserBulunamadıException;
 
@@ -45,7 +46,8 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler({UserBulunamadıException.class,
                        KategoriBulunamadıException.class,
-                       UrunBulunamadiException.class})
+                       UrunBulunamadiException.class,
+                       UnauthorizedException.class})
      public ResponseEntity<String> handleNotFound(RuntimeException ex) {
        return ResponseEntity.status(HttpStatus.NOT_FOUND)
                .body(ex.getMessage());
