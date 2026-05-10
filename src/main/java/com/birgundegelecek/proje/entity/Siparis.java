@@ -12,9 +12,11 @@ import com.birgundegelecek.proje.status.SiparisStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.PackagePrivate;
 
 @Entity
 @Getter
@@ -53,6 +56,12 @@ public class Siparis {
 	
 	@Column(nullable = false)
 	private BigDecimal toplamFiyat;
+	
+	@Column(unique = true )
+	private String siparisKodu;
+	
+	@Embedded
+	private AddressSnapshot adres;
 	
 	@ManyToOne
 	@JoinColumn(name = "sahip")
