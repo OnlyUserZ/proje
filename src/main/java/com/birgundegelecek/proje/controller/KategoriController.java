@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/kategoriler")
 @RequiredArgsConstructor
-@Validated
 public class KategoriController {
 
     private final KategoriService kategoriService;
