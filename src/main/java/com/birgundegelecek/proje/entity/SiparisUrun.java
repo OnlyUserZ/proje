@@ -40,12 +40,10 @@ public class SiparisUrun {
 	private long id;
 	
 	@ManyToOne
-	@Column(nullable = false)
 	@JoinColumn(name = "siparis_id")
 	private Siparis siparis;
 	
 	@ManyToOne
-	@Column(nullable = false)
 	@JoinColumn(name = "urun_id")
 	private Urun urun;
 	

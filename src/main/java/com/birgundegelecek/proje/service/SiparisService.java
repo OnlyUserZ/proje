@@ -17,6 +17,7 @@ import com.birgundegelecek.proje.entity.Adres;
 import com.birgundegelecek.proje.entity.SepetUrun;
 import com.birgundegelecek.proje.entity.Siparis;
 import com.birgundegelecek.proje.entity.SiparisUrun;
+import com.birgundegelecek.proje.entity.Urun;
 import com.birgundegelecek.proje.entity.User;
 import com.birgundegelecek.proje.entity.UserSepet;
 import com.birgundegelecek.proje.exception.AdresBulunamadıException;
@@ -68,9 +69,15 @@ public class SiparisService {
 			
 			SiparisUrun siparisUrun = new SiparisUrun();
 			
+		    Urun urun = sepetUrun.getUrun();
+		    
+		    urun.setAktifStok(urun.getAktifStok() - sepetUrun.getAdet());
+		    urun.setRezerveStok(urun.getRezerveStok() + sepetUrun.getAdet());
+		    
 			siparisUrun.setAdet(sepetUrun.getAdet());
 			siparisUrun.setToplam_fiyat(sepetUrun.getToplamFiyat());
 			siparisUrun.setUrun(sepetUrun.getUrun());
+			
 			siparisUrun.setSiparis(siparis);
 			
 			toplamFiyat = toplamFiyat.add(sepetUrun.getToplamFiyat());

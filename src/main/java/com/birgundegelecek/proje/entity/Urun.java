@@ -68,9 +68,6 @@ public class Urun {
 	@Column(nullable = false)
 	private int aktifStok;
 	
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted = false;
-	
 	@OneToMany(mappedBy = "urun")
 	private Set<SiparisUrun> siparisUrun = new HashSet<>();
 	

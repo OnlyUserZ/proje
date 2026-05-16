@@ -48,7 +48,4 @@ public class Kategori {
 	@ManyToMany(mappedBy = "kategoriler")
 	private Set<Urun> urunler = new HashSet<>();
 	
-	@Column(name = "deleted", nullable = false)
-	private boolean deleted = false;
-	
 }

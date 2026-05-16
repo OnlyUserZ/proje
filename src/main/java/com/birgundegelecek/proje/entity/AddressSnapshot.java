@@ -19,4 +19,5 @@ public class AddressSnapshot {
     private int daireNo;
     private String adresTarifi;
     private String adresBasligi;
+    
 }
