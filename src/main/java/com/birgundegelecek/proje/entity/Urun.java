@@ -65,8 +65,7 @@ public class Urun {
 	@Column(name = "rezerve_stok",nullable = false)
 	private int rezerveStok = 0;
 	
-	@Column(nullable = false)
-	private int aktifStok;
+	
 	
 	@OneToMany(mappedBy = "urun")
 	private Set<SiparisUrun> siparisUrun = new HashSet<>();

@@ -6,11 +6,16 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.birgundegelecek.proje.entity.Urun;
+
+import jakarta.persistence.LockModeType;
+
 import com.birgundegelecek.proje.entity.SepetUrun;
 import java.util.Set;
 
@@ -22,6 +27,10 @@ public interface UrunRepository extends JpaRepository<Urun, Long> {
 	Page<Urun> findByKategori_id(@Param("id") Long id , Pageable pageable);
 	
 	Optional<Urun> findById(long id);
+	
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT u FROM Urun u WHERE u.id = :id")
+	Urun findForUpdate(@Param("id") Long id);
 	
 	
 } 

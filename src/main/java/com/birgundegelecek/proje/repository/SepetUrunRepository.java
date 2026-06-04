@@ -13,8 +13,6 @@ import java.util.List;
 import com.birgundegelecek.proje.entity.Urun;
 import com.birgundegelecek.proje.entity.UserSepet;
 
-
-
 @Repository
 public interface SepetUrunRepository extends JpaRepository<SepetUrun, Long> {
 	
@@ -29,6 +27,5 @@ public interface SepetUrunRepository extends JpaRepository<SepetUrun, Long> {
 		                                      @Param("userId") Long userId);
 
 	List<SepetUrun> findByUserSepet(UserSepet userSepet);
-	
 	
 }
